@@ -5,50 +5,56 @@ const Board = () => {
   const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
-    freshBoard();
+    setGrid(createEmptyBoard(10,10))
   }, []);
 
-  const freshBoard = () => {
-    const boardHeight = 10;
-    const boardWidth = 10;
-    const mineCount = 15;
+  
+  function getValue() {
 
-    const newGrid = blankBoard(boardHeight, boardHeight, mineCount);
-    setGrid(newGrid);
-    setGameOver(false);
-  };
-
-  const blankBoard = (height, width, mines) => {
-    const grid = [];
-
-    for (let i=0; i<height; i++) {
-        const row = [];
-        for (let j=0; j<width; j++) {
-            row.push({
-                isMine: false,
-                isRevealed:false, 
-                adjacementMines:0,
-            })
-        }
-        grid.push(row)
-    }
-    return grid;
   }
 
+  function handleClick() {
+  
+  }
+
+  function createEmptyBoard(rows, cols) {
+    const board = [];
+    for (let i = 0; i < rows; i++) {
+      const row = [];
+      for (let j = 0; j < cols; j++) {
+        row.push({
+          row: i,
+          col: j,
+          isMine: false,
+          isRevealed: false,
+        });
+      }
+      board.push(row);
+    }
+    return board;
+  }
+
+  function renderBoard() {
+    return grid.map((row, rowIndex) => (
+      <div key={rowIndex}>
+        {row.map((cell) => (
+          <div
+            key={`${cell.row}-${cell.col}`}
+            className={`cell ${cell.isRevealed ? 'revealed' : ''}`}
+            onClick={() => handleClick(cell)}
+          >
+            {cell.isRevealed ? getValue(cell) : null}
+          </div>
+        ))}
+      </div>
+    ));
+  }
   return (
-    <div className="board">
-      {grid.map((row, rowIndex) => (
-        <div key={rowIndex} className="row">
-          {row.map((cell, columnIndex) => (
-            <div
-              key={columnIndex}
-              className="cell"
-            >
-            </div>
-          ))}
-        </div>
-      ))}
+    <div>
+      <h1>Minesweeper</h1>
+      <div className="board">{renderBoard()}</div>
     </div>
   );
-};
+}
+
 export default Board;
